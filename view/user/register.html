@@ -1,0 +1,73 @@
+{{define "/user/register.shtml"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>注册</title>
+    <link rel="stylesheet" href="/asset/plugins/mui/css/mui.css"/>
+    <link rel="stylesheet" href="/asset/css/login.css"/>
+    <script src="/asset/plugins/mui/js/mui.js"></script>
+    <script src="/asset/js/vue.min.js"></script>
+    <script src="/asset/js/util.js"></script>
+</head>
+<body>
+
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">注册</h1>
+</header>
+<div class="mui-content" id="pageapp">
+    <form id='login-form' class="mui-input-group">
+        <div class="mui-input-row">
+            <label>账号</label>
+            <input required v-model="user.mobile" placeholder="请输入手机号" type="text" class="mui-input-clear mui-input">
+        </div>
+        <div class="mui-input-row">
+            <label>昵称</label>
+            <input required v-model="user.nickname" placeholder="请输入昵称" type="text" class="mui-input-clear mui-input">
+        </div>
+        <div class="mui-input-row">
+            <label>密码</label>
+            <input required v-model="user.password" placeholder="请输入密码" type="password" class="mui-input-clear mui-input">
+        </div>
+    </form>
+    <div class="mui-content-padded">
+        <button @click="userRegister" type="button" class="mui-btn mui-btn-block mui-btn-primary">注册</button>
+        <div class="link-area">
+            <a >已有账号？</a>
+            <span class="spliter">|</span>
+            <a id='reg' href="/user/login.shtml">登录</a>
+        </div>
+    </div>
+    <div class="mui-content-padded oauth-area">
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var app = new Vue({
+        el: "#pageapp",
+        data: function () {
+            return {
+                user: {
+                    mobile: "",
+                    password: "",
+                    nickname: '',
+                }
+            }
+        },
+        methods: {
+            userRegister(){
+                if (this.user.nickname === '' || this.user.password === '' || this.user.mobile === '') return mui.alert("字段不能为空")
+                util.post("register", this.user).then(res => {
+                    if (res.code !== 0) {
+                        return mui.toast(res.msg)
+                    } else {
+                        mui.toast("注册成功,正在跳转登录页面");
+                        window.location.href = "/user/login.shtml";
+                    }
+                })
+            },
+        }
+    })
+</script>
+{{end}}
